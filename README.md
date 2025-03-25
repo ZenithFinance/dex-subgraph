@@ -1,21 +1,50 @@
-# Uniswap V3 and V3-Tokens Subgraph
 
-## Development
+# Envio Uniswap V3 Indexer
 
-1. Install dependencies
-`yarn install`
+> [!NOTE]
+> Tokens in this indexer doesn't have the `totalSupply` field as it cannot be updated correctly
 
-2. Build a v3 subgraph
-`yarn build --network <network> --subgraph-type v3` 
 
-3. Deploy a v3 subgraph
-`yarn build --network <network> --subgraph-type v3 --deploy`
+## Queries for pool listing
 
-4. Build a v3-tokens subgraph
-`yarn build --network <network> --subgraph-type v3-tokens`
+Envio
 
-5. Deploy a v3-tokens subgraph
-`yarn build --network <network> --subgraph-type v3-tokens --deploy`
+```graphql
+query PoolQuery {
+  Pool {
+    id
+    token0 {
+      id
+      name
+      decimals
+    }
+    token1 {
+      id
+      name
+      decimals
+    }
+    createdAtBlockNumber
+  }
+}
+```
 
-Note: Deployments will fail if there are uncommitted changes in the subgraph. Please commit your changes before deploying.
+Subgraph
 
+```graphql
+{
+  pools {
+    token0 {
+      id
+      name
+      decimals
+    }
+    id
+    token1 {
+      id
+      name
+      decimals
+    }
+    createdAtBlockNumber
+  }
+}
+```
