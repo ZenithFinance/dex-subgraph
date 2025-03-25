@@ -2,7 +2,7 @@
 name: dex_subgraph
 networks:
   - id: 97
-    start_block: 0
+    start_block: 49389905
     contracts:
       - name: UniswapV3Factory
         address: 0x1049B57c3e59DCA685E9743b5FE5f0b43D287582
