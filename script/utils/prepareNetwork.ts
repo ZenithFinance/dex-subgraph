@@ -4,25 +4,12 @@ import * as path from 'path'
 import * as process from 'process'
 
 export enum NETWORK {
-  ARBITRUM = 'arbitrum-one',
-  AVALANCHE = 'avalanche',
-  BASE = 'base',
-  BLAST = 'blast-mainnet',
-  BSC = 'bsc',
-  CELO = 'celo',
-  ETHEREUM = 'ethereum',
-  MATIC = 'matic',
-  OPTIMISM = 'optimism',
-  SONEIUM = 'soneium-mainnet',
-  UNICHAIN = 'unichain-mainnet',
-  WORLDCHAIN = 'worldchain-mainnet',
-  ZKSYNC_ERA = 'zksync-era',
-  ZORA = 'zora-mainnet',
+  CHAPEL = 'chapel'
 }
 
 export enum SUBGRAPH_TYPE {
   V3_TOKENS = 'v3-tokens',
-  V3 = 'v3',
+  V3 = 'v3'
 }
 
 const CHAIN_CONSTANTS_FILE_NAME = 'chain.ts'
@@ -36,7 +23,7 @@ export function validateNetwork(network: string): void {
 
   if (
     !Object.values(NETWORK)
-      .map((n) => n.toString())
+      .map(n => n.toString())
       .includes(network)
   ) {
     console.error('invalid network parameter passed, pass either: ', ...Object.values(NETWORK))
@@ -52,7 +39,7 @@ export function validateSubgraphType(subgraphType: string): void {
 
   if (
     !Object.values(SUBGRAPH_TYPE)
-      .map((n) => n.toString())
+      .map(n => n.toString())
       .includes(subgraphType)
   ) {
     console.error('invalid subgraph name parameter passed, pass either: ', ...Object.values(SUBGRAPH_TYPE))
@@ -73,6 +60,19 @@ export function getSubgraphName(subgraphType: string): string {
   }
   return process.env.V3_SUBGRAPH_NAME
 }
+export function getSubgraphVersion(subgraphType: string): string {
+  dotenv.config({ path: '.subgraph-env' })
+  if (subgraphType === SUBGRAPH_TYPE.V3_TOKENS) {
+    if (!process.env.V3_TOKEN_SUBGRAPH_VERSION) {
+      throw new Error('V3_TOKEN_SUBGRAPH_VERSION must be set')
+    }
+    return process.env.V3_TOKEN_SUBGRAPH_VERSION
+  }
+  if (!process.env.V3_SUBGRAPH_VERSION) {
+    throw new Error('V3_SUBGRAPH_VERSION must be set')
+  }
+  return process.env.V3_SUBGRAPH_VERSION
+}
 
 export function getAlchemyDeploymentParams(): {
   node: string
@@ -86,7 +86,7 @@ export function getAlchemyDeploymentParams(): {
   return {
     node: process.env.ALCHEMY_DEPLOY_URL,
     ipfs: process.env.ALCHEMY_IPFS_URL,
-    deployKey: process.env.ALCHEMY_DEPLOY_KEY,
+    deployKey: process.env.ALCHEMY_DEPLOY_KEY
   }
 }
 
