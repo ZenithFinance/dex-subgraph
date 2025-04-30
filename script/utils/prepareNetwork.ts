@@ -4,7 +4,8 @@ import * as path from 'path'
 import * as process from 'process'
 
 export enum NETWORK {
-  CHAPEL = 'chapel'
+  CHAPEL = 'chapel',
+  PHAROS = 'pharos'
 }
 
 export enum SUBGRAPH_TYPE {
@@ -74,19 +75,17 @@ export function getSubgraphVersion(subgraphType: string): string {
   return process.env.V3_SUBGRAPH_VERSION
 }
 
-export function getAlchemyDeploymentParams(): {
+export function getDeploymentParams(): {
   node: string
   ipfs: string
-  deployKey: string
 } {
   dotenv.config()
-  if (!process.env.ALCHEMY_DEPLOY_URL || !process.env.ALCHEMY_IPFS_URL || !process.env.ALCHEMY_DEPLOY_KEY) {
-    throw new Error('ALCHEMY_DEPLOY_URL, ALCHEMY_IPFS_URL, and ALCHEMY_DEPLOY_KEY must be set')
+  if (!process.env.DEPLOY_URL || !process.env.IPFS_URL) {
+    throw new Error('DEPLOY_URL, _IPFS_URL must be set')
   }
   return {
-    node: process.env.ALCHEMY_DEPLOY_URL,
-    ipfs: process.env.ALCHEMY_IPFS_URL,
-    deployKey: process.env.ALCHEMY_DEPLOY_KEY
+    node: process.env.DEPLOY_URL,
+    ipfs: process.env.IPFS_URL
   }
 }
 

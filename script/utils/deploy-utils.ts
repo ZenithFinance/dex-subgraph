@@ -1,7 +1,7 @@
 import { exec as execCallback } from 'child_process'
 import * as util from 'util'
 
-import { getSubgraphName, getSubgraphVersion, prepare } from './prepareNetwork'
+import { getDeploymentParams, getSubgraphName, getSubgraphVersion, prepare } from './prepareNetwork'
 
 const exec = util.promisify(execCallback)
 
@@ -33,11 +33,17 @@ export const deploy = async (subgraphType: string): Promise<void> => {
   //   const gitHashString = gitHash.toString().trim()
   const subgraphName = getSubgraphName(subgraphType)
   const subgraphVersion = getSubgraphVersion(subgraphType)
-  //   const { node, ipfs, deployKey } = getAlchemyDeploymentParams()
+  const { node, ipfs } = getDeploymentParams()
 
   try {
-    console.log(`goldsky subgraph deploy ${subgraphName}/${subgraphVersion} --path build`)
-    const { stdout, stderr } = await exec(`goldsky subgraph deploy ${subgraphName}/${subgraphVersion} --path build`)
+    console.log(
+      `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
+    )
+    const { stdout, stderr } = await exec(
+      `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
+    )
+    // console.log(`goldsky subgraph deploy ${subgraphName}/${subgraphVersion} --path build`)
+    // const { stdout, stderr } = await exec(`goldsky subgraph deploy ${subgraphName}/${subgraphVersion} --path build`)
     if (stderr.includes('Subgraph version already exists')) {
       console.log('Subgraph version already exists. Please update the version label and try again.')
     }

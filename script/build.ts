@@ -9,19 +9,19 @@ async function main(): Promise<void> {
       alias: 'n',
       description: 'Network to build for',
       type: 'string',
-      demandOption: true,
+      demandOption: true
     })
     .option('subgraph-type', {
       alias: 's',
       description: 'Type of the subgraph',
       type: 'string',
-      demandOption: true,
+      demandOption: true
     })
     .option('deploy', {
       alias: 'd',
       description: 'Deploy the subgraph',
       type: 'boolean',
-      default: false,
+      default: false
     })
     .help().argv
   validateNetwork(argv.network)

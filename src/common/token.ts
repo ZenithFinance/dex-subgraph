@@ -9,6 +9,7 @@ import { getStaticDefinition } from './staticTokenDefinition'
 import { isNullEthValue } from './utils'
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
+  //   return 'unknown'
   let staticDefinition = getStaticDefinition(tokenAddress)
   if (staticDefinition != null) {
     return (staticDefinition as TokenDefinition).symbol
@@ -35,6 +36,7 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
 }
 
 export function fetchTokenName(tokenAddress: Address): string {
+  //   return 'unknown'
   let staticDefinition = getStaticDefinition(tokenAddress)
   if (staticDefinition != null) {
     return (staticDefinition as TokenDefinition).name
@@ -61,6 +63,7 @@ export function fetchTokenName(tokenAddress: Address): string {
 }
 
 export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
+  //   return BigInt.zero()
   let contract = ERC20.bind(tokenAddress)
   let totalSupplyValue = BigInt.zero()
   let totalSupplyResult = contract.try_totalSupply()
@@ -71,6 +74,7 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
 }
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt | null {
+  //   return BigInt.fromI32(18)
   let staticDefinition = getStaticDefinition(tokenAddress)
   if (staticDefinition != null) {
     return (staticDefinition as TokenDefinition).decimals
