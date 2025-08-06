@@ -11,11 +11,14 @@ import {
   updatePoolHourData,
   updateTokenDayData,
   updateTokenHourData,
-  updateUniswapDayData,
+  updateUniswapDayData
 } from './intervalUpdates'
 import { loadTransaction } from './utils'
 
 export function handleSwap(event: SwapEvent): void {
+  if (event.block.number < BigInt.fromI64(15300000)) {
+    return
+  }
   const factoryAddress = FACTORY_ADDRESS
 
   const bundle = Bundle.load('1')!
