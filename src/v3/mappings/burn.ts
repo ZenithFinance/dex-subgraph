@@ -3,14 +3,14 @@ import { BigInt } from '@graphprotocol/graph-ts'
 import { Bundle, Burn, Factory, Pool, Tick, Token } from '../../../generated/schema'
 import { Burn as BurnEvent } from '../../../generated/templates/Pool/Pool'
 import { FACTORY_ADDRESS } from '../../common/chain'
-import { ONE_BI } from '../../common/constants'
+import { ONE_BI, START_BLOCK_NUMBER } from '../../common/constants'
 import { convertTokenToDecimal } from '../../common/utils'
 import {
   updatePoolDayData,
   updatePoolHourData,
   updateTokenDayData,
   updateTokenHourData,
-  updateUniswapDayData,
+  updateUniswapDayData
 } from './intervalUpdates'
 import { loadTransaction } from './utils'
 
@@ -57,22 +57,25 @@ export function handleBurn(event: BurnEvent): void {
     }
 
     // burn entity
-    const transaction = loadTransaction(event)
-    const burn = new Burn(transaction.id + '-' + event.logIndex.toString())
-    burn.transaction = transaction.id
-    burn.timestamp = transaction.timestamp
-    burn.pool = pool.id
-    burn.token0 = pool.token0
-    burn.token1 = pool.token1
-    burn.owner = event.params.owner
-    burn.origin = event.transaction.from
-    burn.amount = event.params.amount
-    burn.amount0 = amount0
-    burn.amount1 = amount1
-    burn.amountUSD = amountUSD
-    burn.tickLower = BigInt.fromI32(event.params.tickLower)
-    burn.tickUpper = BigInt.fromI32(event.params.tickUpper)
-    burn.logIndex = event.logIndex
+    let burn: Burn
+    if (event.block.number > START_BLOCK_NUMBER) {
+      const transaction = loadTransaction(event)
+      burn = new Burn(transaction.id + '-' + event.logIndex.toString())
+      burn.transaction = transaction.id
+      burn.timestamp = transaction.timestamp
+      burn.pool = pool.id
+      burn.token0 = pool.token0
+      burn.token1 = pool.token1
+      burn.owner = event.params.owner
+      burn.origin = event.transaction.from
+      burn.amount = event.params.amount
+      burn.amount0 = amount0
+      burn.amount1 = amount1
+      burn.amountUSD = amountUSD
+      burn.tickLower = BigInt.fromI32(event.params.tickLower)
+      burn.tickUpper = BigInt.fromI32(event.params.tickUpper)
+      burn.logIndex = event.logIndex
+    }
 
     // tick entities
     const lowerTickId = pool.id.toHexString() + '#' + BigInt.fromI32(event.params.tickLower).toString()
@@ -101,6 +104,8 @@ export function handleBurn(event: BurnEvent): void {
     token1.save()
     pool.save()
     factory.save()
-    burn.save()
+    if (burn) {
+      burn.save()
+    }
   }
 }

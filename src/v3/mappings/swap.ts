@@ -3,7 +3,7 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { Bundle, Factory, Pool, Swap, Token } from '../../../generated/schema'
 import { Swap as SwapEvent } from '../../../generated/templates/Pool/Pool'
 import { FACTORY_ADDRESS } from '../../common/chain'
-import { ONE_BI, ZERO_BD } from '../../common/constants'
+import { ONE_BI, START_BLOCK_NUMBER, ZERO_BD } from '../../common/constants'
 import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, sqrtPriceX96ToTokenPrices } from '../../common/pricing'
 import { convertTokenToDecimal, safeDiv } from '../../common/utils'
 import {
@@ -16,9 +16,6 @@ import {
 import { loadTransaction } from './utils'
 
 export function handleSwap(event: SwapEvent): void {
-  if (event.block.number < BigInt.fromI64(15300000)) {
-    return
-  }
   const factoryAddress = FACTORY_ADDRESS
 
   const bundle = Bundle.load('1')!
@@ -133,23 +130,25 @@ export function handleSwap(event: SwapEvent): void {
     token1.totalValueLockedUSD = token1.totalValueLocked.times(token1.derivedETH).times(bundle.ethPriceUSD)
 
     // create Swap event
-    const transaction = loadTransaction(event)
-    const swap = new Swap(transaction.id + '-' + event.logIndex.toString())
-    swap.transaction = transaction.id
-    swap.timestamp = transaction.timestamp
-    swap.pool = pool.id
-    swap.token0 = pool.token0
-    swap.token1 = pool.token1
-    swap.sender = event.params.sender
-    swap.origin = event.transaction.from
-    swap.recipient = event.params.recipient
-    swap.amount0 = amount0
-    swap.amount1 = amount1
-    swap.amountUSD = amountTotalUSDTracked
-    swap.tick = BigInt.fromI32(event.params.tick as i32)
-    swap.sqrtPriceX96 = event.params.sqrtPriceX96
-    swap.logIndex = event.logIndex
-
+    let swap: Swap
+    if (event.block.number > START_BLOCK_NUMBER) {
+      const transaction = loadTransaction(event)
+      swap = new Swap(transaction.id + '-' + event.logIndex.toString())
+      swap.transaction = transaction.id
+      swap.timestamp = transaction.timestamp
+      swap.pool = pool.id
+      swap.token0 = pool.token0
+      swap.token1 = pool.token1
+      swap.sender = event.params.sender
+      swap.origin = event.transaction.from
+      swap.recipient = event.params.recipient
+      swap.amount0 = amount0
+      swap.amount1 = amount1
+      swap.amountUSD = amountTotalUSDTracked
+      swap.tick = BigInt.fromI32(event.params.tick as i32)
+      swap.sqrtPriceX96 = event.params.sqrtPriceX96
+      swap.logIndex = event.logIndex
+    }
     // interval data
     const uniswapDayData = updateUniswapDayData(event, factoryAddress)
     const poolDayData = updatePoolDayData(event)
@@ -194,7 +193,9 @@ export function handleSwap(event: SwapEvent): void {
     token1HourData.untrackedVolumeUSD = token1HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
     token1HourData.feesUSD = token1HourData.feesUSD.plus(feesUSD)
 
-    swap.save()
+    if (swap) {
+      swap.save()
+    }
     token0DayData.save()
     token1DayData.save()
     uniswapDayData.save()

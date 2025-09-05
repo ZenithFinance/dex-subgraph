@@ -3,7 +3,7 @@ import { BigInt } from '@graphprotocol/graph-ts'
 import { Bundle, Collect, Factory, Pool, Token } from '../../../generated/schema'
 import { Collect as CollectEvent } from '../../../generated/templates/Pool/Pool'
 import { FACTORY_ADDRESS } from '../../common/chain'
-import { ONE_BI } from '../../common/constants'
+import { ONE_BI, START_BLOCK_NUMBER } from '../../common/constants'
 import { getTrackedAmountUSD } from '../../common/pricing'
 import { convertTokenToDecimal } from '../../common/utils'
 import {
@@ -11,7 +11,7 @@ import {
   updatePoolHourData,
   updateTokenDayData,
   updateTokenHourData,
-  updateUniswapDayData,
+  updateUniswapDayData
 } from './intervalUpdates'
 import { loadTransaction } from './utils'
 
@@ -23,7 +23,6 @@ export function handleCollect(event: CollectEvent): void {
   if (pool == null) {
     return
   }
-  const transaction = loadTransaction(event)
   const factory = Factory.load(factoryAddress)!
 
   const token0 = Token.load(pool.token0)
@@ -75,17 +74,21 @@ export function handleCollect(event: CollectEvent): void {
   factory.totalValueLockedETH = factory.totalValueLockedETH.plus(pool.totalValueLockedETH)
   factory.totalValueLockedUSD = factory.totalValueLockedETH.times(bundle.ethPriceUSD)
 
-  const collect = new Collect(transaction.id + '-' + event.logIndex.toString())
-  collect.transaction = transaction.id
-  collect.timestamp = event.block.timestamp
-  collect.pool = pool.id
-  collect.owner = event.params.owner
-  collect.amount0 = collectedAmountToken0
-  collect.amount1 = collectedAmountToken1
-  collect.amountUSD = trackedCollectedAmountUSD
-  collect.tickLower = BigInt.fromI32(event.params.tickLower)
-  collect.tickUpper = BigInt.fromI32(event.params.tickUpper)
-  collect.logIndex = event.logIndex
+  let collect: Collect
+  if (event.block.number > START_BLOCK_NUMBER) {
+    const transaction = loadTransaction(event)
+    collect = new Collect(transaction.id + '-' + event.logIndex.toString())
+    collect.transaction = transaction.id
+    collect.timestamp = event.block.timestamp
+    collect.pool = pool.id
+    collect.owner = event.params.owner
+    collect.amount0 = collectedAmountToken0
+    collect.amount1 = collectedAmountToken1
+    collect.amountUSD = trackedCollectedAmountUSD
+    collect.tickLower = BigInt.fromI32(event.params.tickLower)
+    collect.tickUpper = BigInt.fromI32(event.params.tickUpper)
+    collect.logIndex = event.logIndex
+  }
 
   updateUniswapDayData(event, factoryAddress)
   updatePoolDayData(event)
@@ -99,7 +102,9 @@ export function handleCollect(event: CollectEvent): void {
   token1.save()
   factory.save()
   pool.save()
-  collect.save()
+  if (collect) {
+    collect.save()
+  }
 
   return
 }

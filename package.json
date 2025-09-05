@@ -5,7 +5,7 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "cross-env ts-node ./script/build.ts",
-    "create-testnet": "graph create --node http://subgraph.zenithfinance.xyz/testnet/deploy/ dex-subgraph",
+    "create-testnet": "graph create --node https://subgraph-testnet.zenithswap.xyz/deploy/ dex-subgraph",
     "lint": "eslint . --ext .ts --fix"
   },
   "devDependencies": {
