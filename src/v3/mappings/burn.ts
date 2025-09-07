@@ -72,12 +72,12 @@ export function handleBurn(event: BurnEvent): void {
       upperTick.save()
     }
     updateUniswapDayData(event, factoryAddress)
-    updatePoolDayData(event)
-    updatePoolHourData(event)
-    updateTokenDayData(token0 as Token, event)
-    updateTokenDayData(token1 as Token, event)
-    updateTokenHourData(token0 as Token, event)
-    updateTokenHourData(token1 as Token, event)
+    // updatePoolDayData(event)
+    // updatePoolHourData(event)
+    // updateTokenDayData(token0 as Token, event)
+    // updateTokenDayData(token1 as Token, event)
+    // updateTokenHourData(token0 as Token, event)
+    // updateTokenHourData(token1 as Token, event)
 
     token0.save()
     token1.save()
