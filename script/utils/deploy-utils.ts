@@ -36,9 +36,9 @@ export const deploy = async (subgraphType: string): Promise<void> => {
   const { node, ipfs } = getDeploymentParams()
 
   try {
-    // console.log(
-    //   `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
-    // )
+    console.log(
+      `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
+    )
     const { stdout, stderr } = await exec(
       `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
     )

@@ -74,22 +74,6 @@ export function handleCollect(event: CollectEvent): void {
   factory.totalValueLockedETH = factory.totalValueLockedETH.plus(pool.totalValueLockedETH)
   factory.totalValueLockedUSD = factory.totalValueLockedETH.times(bundle.ethPriceUSD)
 
-  let collect: Collect
-  if (event.block.number > START_BLOCK_NUMBER) {
-    const transaction = loadTransaction(event)
-    collect = new Collect(transaction.id + '-' + event.logIndex.toString())
-    collect.transaction = transaction.id
-    collect.timestamp = event.block.timestamp
-    collect.pool = pool.id
-    collect.owner = event.params.owner
-    collect.amount0 = collectedAmountToken0
-    collect.amount1 = collectedAmountToken1
-    collect.amountUSD = trackedCollectedAmountUSD
-    collect.tickLower = BigInt.fromI32(event.params.tickLower)
-    collect.tickUpper = BigInt.fromI32(event.params.tickUpper)
-    collect.logIndex = event.logIndex
-  }
-
   updateUniswapDayData(event, factoryAddress)
   updatePoolDayData(event)
   updatePoolHourData(event)
@@ -102,9 +86,21 @@ export function handleCollect(event: CollectEvent): void {
   token1.save()
   factory.save()
   pool.save()
-  if (collect) {
+
+  if (event.block.number > START_BLOCK_NUMBER) {
+    const transaction = loadTransaction(event)
+    const collect = new Collect(transaction.id + '-' + event.logIndex.toString())
+    collect.transaction = transaction.id
+    collect.timestamp = event.block.timestamp
+    collect.pool = pool.id
+    collect.owner = event.params.owner
+    collect.amount0 = collectedAmountToken0
+    collect.amount1 = collectedAmountToken1
+    collect.amountUSD = trackedCollectedAmountUSD
+    collect.tickLower = BigInt.fromI32(event.params.tickLower)
+    collect.tickUpper = BigInt.fromI32(event.params.tickUpper)
+    collect.logIndex = event.logIndex
     collect.save()
   }
-
   return
 }

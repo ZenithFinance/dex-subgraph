@@ -73,26 +73,6 @@ export function handleMint(event: MintEvent): void {
     factory.totalValueLockedETH = factory.totalValueLockedETH.plus(pool.totalValueLockedETH)
     factory.totalValueLockedUSD = factory.totalValueLockedETH.times(bundle.ethPriceUSD)
 
-    let mint: Mint
-    if (event.block.number > START_BLOCK_NUMBER) {
-      const transaction = loadTransaction(event)
-      mint = new Mint(transaction.id.toString() + '-' + event.logIndex.toString())
-      mint.transaction = transaction.id
-      mint.timestamp = transaction.timestamp
-      mint.pool = pool.id
-      mint.token0 = pool.token0
-      mint.token1 = pool.token1
-      mint.owner = event.params.owner
-      mint.sender = event.params.sender
-      mint.origin = event.transaction.from
-      mint.amount = event.params.amount
-      mint.amount0 = amount0
-      mint.amount1 = amount1
-      mint.amountUSD = amountUSD
-      mint.tickLower = BigInt.fromI32(event.params.tickLower)
-      mint.tickUpper = BigInt.fromI32(event.params.tickUpper)
-      mint.logIndex = event.logIndex
-    }
     // tick entities
     const lowerTickIdx = event.params.tickLower
     const upperTickIdx = event.params.tickUpper
@@ -135,7 +115,25 @@ export function handleMint(event: MintEvent): void {
     token1.save()
     pool.save()
     factory.save()
-    if (mint) {
+
+    if (event.block.number > START_BLOCK_NUMBER) {
+      const transaction = loadTransaction(event)
+      const mint = new Mint(transaction.id.toString() + '-' + event.logIndex.toString())
+      mint.transaction = transaction.id
+      mint.timestamp = transaction.timestamp
+      mint.pool = pool.id
+      mint.token0 = pool.token0
+      mint.token1 = pool.token1
+      mint.owner = event.params.owner
+      mint.sender = event.params.sender
+      mint.origin = event.transaction.from
+      mint.amount = event.params.amount
+      mint.amount0 = amount0
+      mint.amount1 = amount1
+      mint.amountUSD = amountUSD
+      mint.tickLower = BigInt.fromI32(event.params.tickLower)
+      mint.tickUpper = BigInt.fromI32(event.params.tickUpper)
+      mint.logIndex = event.logIndex
       mint.save()
     }
   }
