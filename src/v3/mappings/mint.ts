@@ -104,12 +104,6 @@ export function handleMint(event: MintEvent): void {
     // level requires reimplementing some of the swapping code from v3-core.
 
     updateUniswapDayData(event, factoryAddress)
-    // updatePoolDayData(event)
-    // updatePoolHourData(event)
-    // updateTokenDayData(token0 as Token, event)
-    // updateTokenDayData(token1 as Token, event)
-    // updateTokenHourData(token0 as Token, event)
-    // updateTokenHourData(token1 as Token, event)
 
     token0.save()
     token1.save()
@@ -135,6 +129,13 @@ export function handleMint(event: MintEvent): void {
       mint.tickUpper = BigInt.fromI32(event.params.tickUpper)
       mint.logIndex = event.logIndex
       mint.save()
+
+      updatePoolDayData(event)
+      updatePoolHourData(event)
+      updateTokenDayData(token0 as Token, event)
+      updateTokenDayData(token1 as Token, event)
+      updateTokenHourData(token0 as Token, event)
+      updateTokenHourData(token1 as Token, event)
     }
   }
 }

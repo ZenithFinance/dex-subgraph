@@ -75,12 +75,6 @@ export function handleCollect(event: CollectEvent): void {
   factory.totalValueLockedUSD = factory.totalValueLockedETH.times(bundle.ethPriceUSD)
 
   updateUniswapDayData(event, factoryAddress)
-  //   updatePoolDayData(event)
-  //   updatePoolHourData(event)
-  //   updateTokenDayData(token0 as Token, event)
-  //   updateTokenDayData(token1 as Token, event)
-  //   updateTokenHourData(token0 as Token, event)
-  //   updateTokenHourData(token1 as Token, event)
 
   token0.save()
   token1.save()
@@ -88,6 +82,13 @@ export function handleCollect(event: CollectEvent): void {
   pool.save()
 
   if (event.block.number > START_BLOCK_NUMBER) {
+    updatePoolDayData(event)
+    updatePoolHourData(event)
+    updateTokenDayData(token0 as Token, event)
+    updateTokenDayData(token1 as Token, event)
+    updateTokenHourData(token0 as Token, event)
+    updateTokenHourData(token1 as Token, event)
+
     const transaction = loadTransaction(event)
     const collect = new Collect(transaction.id + '-' + event.logIndex.toString())
     collect.transaction = transaction.id
