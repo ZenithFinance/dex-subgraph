@@ -131,47 +131,11 @@ export function handleSwap(event: SwapEvent): void {
 
     // interval data
     const uniswapDayData = updateUniswapDayData(event, factoryAddress)
-    const poolDayData = updatePoolDayData(event)
-    const poolHourData = updatePoolHourData(event)
-    const token0DayData = updateTokenDayData(token0 as Token, event)
-    const token1DayData = updateTokenDayData(token1 as Token, event)
-    const token0HourData = updateTokenHourData(token0 as Token, event)
-    const token1HourData = updateTokenHourData(token1 as Token, event)
 
     // update volume metrics
     uniswapDayData.volumeETH = uniswapDayData.volumeETH.plus(amountTotalETHTracked)
     uniswapDayData.volumeUSD = uniswapDayData.volumeUSD.plus(amountTotalUSDTracked)
     uniswapDayData.feesUSD = uniswapDayData.feesUSD.plus(feesUSD)
-
-    poolDayData.volumeUSD = poolDayData.volumeUSD.plus(amountTotalUSDTracked)
-    poolDayData.volumeToken0 = poolDayData.volumeToken0.plus(amount0Abs)
-    poolDayData.volumeToken1 = poolDayData.volumeToken1.plus(amount1Abs)
-    poolDayData.feesUSD = poolDayData.feesUSD.plus(feesUSD)
-
-    poolHourData.volumeUSD = poolHourData.volumeUSD.plus(amountTotalUSDTracked)
-    poolHourData.volumeToken0 = poolHourData.volumeToken0.plus(amount0Abs)
-    poolHourData.volumeToken1 = poolHourData.volumeToken1.plus(amount1Abs)
-    poolHourData.feesUSD = poolHourData.feesUSD.plus(feesUSD)
-
-    token0DayData.volume = token0DayData.volume.plus(amount0Abs)
-    token0DayData.volumeUSD = token0DayData.volumeUSD.plus(amountTotalUSDTracked)
-    token0DayData.untrackedVolumeUSD = token0DayData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
-    token0DayData.feesUSD = token0DayData.feesUSD.plus(feesUSD)
-
-    token0HourData.volume = token0HourData.volume.plus(amount0Abs)
-    token0HourData.volumeUSD = token0HourData.volumeUSD.plus(amountTotalUSDTracked)
-    token0HourData.untrackedVolumeUSD = token0HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
-    token0HourData.feesUSD = token0HourData.feesUSD.plus(feesUSD)
-
-    token1DayData.volume = token1DayData.volume.plus(amount1Abs)
-    token1DayData.volumeUSD = token1DayData.volumeUSD.plus(amountTotalUSDTracked)
-    token1DayData.untrackedVolumeUSD = token1DayData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
-    token1DayData.feesUSD = token1DayData.feesUSD.plus(feesUSD)
-
-    token1HourData.volume = token1HourData.volume.plus(amount1Abs)
-    token1HourData.volumeUSD = token1HourData.volumeUSD.plus(amountTotalUSDTracked)
-    token1HourData.untrackedVolumeUSD = token1HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
-    token1HourData.feesUSD = token1HourData.feesUSD.plus(feesUSD)
 
     // create Swap event
     if (event.block.number > START_BLOCK_NUMBER) {
@@ -192,15 +156,53 @@ export function handleSwap(event: SwapEvent): void {
       swap.sqrtPriceX96 = event.params.sqrtPriceX96
       swap.logIndex = event.logIndex
       swap.save()
+
+      const poolDayData = updatePoolDayData(event)
+      const poolHourData = updatePoolHourData(event)
+      const token0DayData = updateTokenDayData(token0 as Token, event)
+      const token1DayData = updateTokenDayData(token1 as Token, event)
+      const token0HourData = updateTokenHourData(token0 as Token, event)
+      const token1HourData = updateTokenHourData(token1 as Token, event)
+
+      poolDayData.volumeUSD = poolDayData.volumeUSD.plus(amountTotalUSDTracked)
+      poolDayData.volumeToken0 = poolDayData.volumeToken0.plus(amount0Abs)
+      poolDayData.volumeToken1 = poolDayData.volumeToken1.plus(amount1Abs)
+      poolDayData.feesUSD = poolDayData.feesUSD.plus(feesUSD)
+
+      poolHourData.volumeUSD = poolHourData.volumeUSD.plus(amountTotalUSDTracked)
+      poolHourData.volumeToken0 = poolHourData.volumeToken0.plus(amount0Abs)
+      poolHourData.volumeToken1 = poolHourData.volumeToken1.plus(amount1Abs)
+      poolHourData.feesUSD = poolHourData.feesUSD.plus(feesUSD)
+
+      token0DayData.volume = token0DayData.volume.plus(amount0Abs)
+      token0DayData.volumeUSD = token0DayData.volumeUSD.plus(amountTotalUSDTracked)
+      token0DayData.untrackedVolumeUSD = token0DayData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
+      token0DayData.feesUSD = token0DayData.feesUSD.plus(feesUSD)
+
+      token0HourData.volume = token0HourData.volume.plus(amount0Abs)
+      token0HourData.volumeUSD = token0HourData.volumeUSD.plus(amountTotalUSDTracked)
+      token0HourData.untrackedVolumeUSD = token0HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
+      token0HourData.feesUSD = token0HourData.feesUSD.plus(feesUSD)
+
+      token1DayData.volume = token1DayData.volume.plus(amount1Abs)
+      token1DayData.volumeUSD = token1DayData.volumeUSD.plus(amountTotalUSDTracked)
+      token1DayData.untrackedVolumeUSD = token1DayData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
+      token1DayData.feesUSD = token1DayData.feesUSD.plus(feesUSD)
+
+      token1HourData.volume = token1HourData.volume.plus(amount1Abs)
+      token1HourData.volumeUSD = token1HourData.volumeUSD.plus(amountTotalUSDTracked)
+      token1HourData.untrackedVolumeUSD = token1HourData.untrackedVolumeUSD.plus(amountTotalUSDTracked)
+      token1HourData.feesUSD = token1HourData.feesUSD.plus(feesUSD)
+
+      token0DayData.save()
+      token1DayData.save()
+      poolDayData.save()
+      poolHourData.save()
+      token0HourData.save()
+      token1HourData.save()
+      poolHourData.save()
     }
-    token0DayData.save()
-    token1DayData.save()
     uniswapDayData.save()
-    poolDayData.save()
-    poolHourData.save()
-    token0HourData.save()
-    token1HourData.save()
-    poolHourData.save()
     factory.save()
     pool.save()
     token0.save()
