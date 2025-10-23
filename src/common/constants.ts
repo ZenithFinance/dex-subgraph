@@ -1,7 +1,7 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 
 import { Factory as FactoryContract } from '../../generated/Factory/Factory'
-import { FACTORY_ADDRESS } from './chain'
+import { FACTORY_ADDRESS, _START_BLOCK_NUMBER } from './chain'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 
@@ -11,6 +11,6 @@ export const ZERO_BD = BigDecimal.fromString('0')
 export const ONE_BD = BigDecimal.fromString('1')
 export const BI_18 = BigInt.fromI32(18)
 
-export const START_BLOCK_NUMBER = BigInt.fromI64(24680000)
+export const START_BLOCK_NUMBER = BigInt.fromI64(_START_BLOCK_NUMBER)
 
 export const factoryContract = FactoryContract.bind(Address.fromString(FACTORY_ADDRESS))

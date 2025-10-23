@@ -6,7 +6,8 @@ import * as process from 'process'
 export enum NETWORK {
   CHAPEL = 'chapel',
   PHAROS = 'pharos',
-  PHAROS_TESTNET = 'pharos_testnet'
+  PHAROS_TESTNET = 'pharos_testnet',
+  PHAROS_ATLANTIC = 'pharos_atlantic'
 }
 
 export enum SUBGRAPH_TYPE {
