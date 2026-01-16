@@ -1,15 +1,15 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 
-export const FACTORY_ADDRESS = '0x7ce5b44f2d05babd29cae68557f52ab051265f01'
+export const FACTORY_ADDRESS = '0xb056a6b9f61b2c0ebf4906aac341bd118a1763fe'
 
-export const REFERENCE_TOKEN = '0x76aaada469d23216be5f7c596fa25f282ff9b364' // WETH
-export const STABLE_TOKEN_POOL = '0x073ebd8f7e6c932ce50a570593666ba60e83cce2' // USDT/WETH 500
+export const REFERENCE_TOKEN = '0x838800b758277cc111b2d48ab01e5e164f8e9471' // WPHRS
+export const STABLE_TOKEN_POOL = '0x3a5d830e9149bc19d733f93066fd6e9df389fabf' // USDT/WPHRS 500
 
 export const TVL_MULTIPLIER_THRESHOLD = '2'
 export const MATURE_MARKET = '1000000'
 export const MINIMUM_NATIVE_LOCKED = BigDecimal.fromString('20')
 
-export const _START_BLOCK_NUMBER = 24680000
+export const _START_BLOCK_NUMBER = 0
 export const ROLL_DELETE_HOUR = 768
 export const ROLL_DELETE_MINUTE = 1680
 
@@ -20,13 +20,13 @@ export const ROLL_DELETE_MINUTE_LIMITER = BigInt.fromI32(1000)
 // usually tokens that many tokens are paired with s
 export const WHITELIST_TOKENS: string[] = [
   REFERENCE_TOKEN, // WETH
-  '0xd4071393f8716661958f766df660033b3d35fd29', // USDT
-  '0x72df0bcd7276f2dfbac900d1ce63c272c4bccced' // USDC
+  '0xe7e84b8b4f39c507499c40b4ac199b050e2882d5', // USDT
+  '0xe0be08c77f415f577a1b3a9ad7a1df1479564ec8' // USDC
 ]
 
 export const STABLE_COINS: string[] = [
-  '0xd4071393f8716661958f766df660033b3d35fd29', // USDT
-  '0x72df0bcd7276f2dfbac900d1ce63c272c4bccced' // USDC
+  '0xe7e84b8b4f39c507499c40b4ac199b050e2882d5', // USDT
+  '0xe0be08c77f415f577a1b3a9ad7a1df1479564ec8' // USDC
 ]
 
 export const SKIP_POOLS: string[] = []

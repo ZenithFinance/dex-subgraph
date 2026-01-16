@@ -72,12 +72,6 @@ export function handleBurn(event: BurnEvent): void {
       upperTick.save()
     }
     updateUniswapDayData(event, factoryAddress)
-    updatePoolDayData(event)
-    updatePoolHourData(event)
-    updateTokenDayData(token0 as Token, event)
-    updateTokenDayData(token1 as Token, event)
-    updateTokenHourData(token0 as Token, event)
-    updateTokenHourData(token1 as Token, event)
 
     token0.save()
     token1.save()
@@ -86,6 +80,13 @@ export function handleBurn(event: BurnEvent): void {
 
     // burn entity
     if (event.block.number > START_BLOCK_NUMBER) {
+      updatePoolDayData(event)
+      updatePoolHourData(event)
+      updateTokenDayData(token0 as Token, event)
+      updateTokenDayData(token1 as Token, event)
+      updateTokenHourData(token0 as Token, event)
+      updateTokenHourData(token1 as Token, event)
+
       const transaction = loadTransaction(event)
       const burn = new Burn(transaction.id + '-' + event.logIndex.toString())
       burn.transaction = transaction.id
